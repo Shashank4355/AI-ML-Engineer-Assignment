@@ -97,7 +97,30 @@ The second row is faster mainly because the server was already warm: its kernels
 
 ## Evaluation (bonus)
 
-`python eval/eval.py` sends 13 questions through `/ask`, including one out-of-scope question. **Gemini** (`GEMINI_API_KEY` in `.env`) acts only as the judge and scores faithfulness and relevance from 1 to 5. Gemini never generates the answers; the assignment rules allow closed APIs only for judging. The results are saved to `eval/results.json`.
+`eval/eval.py` sends 13 questions through `/ask`: 12 about the papers and 1 out of scope. **Gemini** (`gemini-3.8-flash`, key in `.env`) acts only as the judge and scores faithfulness and relevance from 1 to 5. Gemini never generates the answers; the assignment rules allow closed APIs only for judging. The two steps can run on different machines:
+
+```bash
+python eval/eval.py --collect eval/answers.json   # on the GPU box (Kaggle): answers from vLLM
+python eval/eval.py --judge   eval/answers.json   # anywhere with GEMINI_API_KEY
+```
+
+**Results** (answers collected on Kaggle 2× T4, judged locally): see `eval/answers.json` and `eval/results.json`.
+
+| Metric | Score |
+|---|---|
+| Mean faithfulness | **4.62 / 5** |
+| Mean relevance | **4.69 / 5** |
+
+Most answers scored 5/5. The misses, analysed honestly:
+
+| Question | Score | What went wrong |
+|---|---|---|
+| BERT pre-training tasks | F2 | Answered "LTR + NSP" from the ablation section, when the correct answer is MLM + NSP. This is a retrieval-ranking error: the verifier checks support, not correctness. |
+| LoRA: no inference latency | F3 | The core reason is correct (W = W0 + BA is merged), but the model added an unsupported claim about gradients. |
+| DPR encoders | R2 | Described the passage encoder only, without saying that DPR uses two independent BERT encoders. |
+| Transformer attention heads | (judged 5/5) | Returned "not found", but the answer (8 heads) *is* in the paper. The judge rewards honesty, yet this is a **retrieval miss**, so real recall is 11/12 answerable questions. |
+
+A cross-encoder reranker and chunking that is aware of tables and sections would target most of these.
 
 ## Sample responses (real outputs from the Colab run)
 

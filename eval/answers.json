@@ -1,0 +1,155 @@
+[
+  {
+    "question": "How many attention heads does the base Transformer use?",
+    "answer": "I couldn't find this in the provided documents.",
+    "sources": [],
+    "final_step": "fallback"
+  },
+  {
+    "question": "What optimizer and learning-rate schedule was used to train the Transformer?",
+    "answer": "The Transformer was trained using the Adam optimizer with β1 = 0.9, β2 = 0.98, and ϵ = 10−9. The learning rate was varied over the course of training according to the formula: lrate = d−0.5 model · min(step_num−0.5, step_num · warmup_steps−1.5) (3). This corresponds to increasing the learning rate linearly for the first warmup_steps training steps and decreasing it thereafter proportionally to the inverse square root of the step number. The warmup_steps used was 4000. [Source: attention_is_all_you_need.pdf, page 7] [Source: lora.pdf, page 21]",
+    "sources": [
+      {
+        "source": "attention_is_all_you_need.pdf",
+        "page": 7
+      },
+      {
+        "source": "lora.pdf",
+        "page": 21
+      }
+    ],
+    "final_step": "verify:pass"
+  },
+  {
+    "question": "What are the two pre-training tasks of BERT?",
+    "answer": "The two pre-training tasks of BERT are: 1. Left-to-right language modeling (LTR). 2. Next sentence prediction (NSP). [Source: bert.pdf, page 14]",
+    "sources": [
+      {
+        "source": "bert.pdf",
+        "page": 14
+      }
+    ],
+    "final_step": "verify:pass"
+  },
+  {
+    "question": "What is the difference between RAG-Sequence and RAG-Token?",
+    "answer": "The difference between RAG-Sequence and RAG-Token lies in how they handle the retrieved documents: - **RAG-Sequence Model**: It treats the retrieved document as a single latent variable and marginalizes to get the seq2seq probability p(y|x). Specifically, it uses a top-K approximation to retrieve the top K documents and then marginalizes over these documents to produce the output sequence. - **RAG-Token Model**: It allows for drawing a different latent document for each target token and marginalizes accordingly. This enables the generator to choose content from multiple documents when producing an answer. The generator produces a distribution for the next output token for each document, before marginalizing, and repeats the process with the following output token. [Source: rag_lewis.pdf, page 3]",
+    "sources": [
+      {
+        "source": "rag_lewis.pdf",
+        "page": 3
+      }
+    ],
+    "final_step": "verify:pass"
+  },
+  {
+    "question": "What encoder does Dense Passage Retrieval use for questions and passages?",
+    "answer": "The Dense Passage Retriever (DPR) uses a dense encoder EP(·) which maps any text passage to a d-dimensional real-valued vectors. [Source: dense_passage_retrieval.pdf, page 2]",
+    "sources": [
+      {
+        "source": "dense_passage_retrieval.pdf",
+        "page": 2
+      }
+    ],
+    "final_step": "verify:pass"
+  },
+  {
+    "question": "Why does LoRA introduce no additional inference latency?",
+    "answer": "LoRA introduces no additional inference latency because it directly computes and stores W = W_0 + BA and performs inference as usual. This approach avoids the need to calculate the gradient for the vast majority of the parameters, thus eliminating the additional latency associated with fine-tuning. [Source: lora.pdf, page 5]",
+    "sources": [
+      {
+        "source": "lora.pdf",
+        "page": 5
+      }
+    ],
+    "final_step": "verify:pass"
+  },
+  {
+    "question": "What problem does PagedAttention solve in LLM serving?",
+    "answer": "PagedAttention solves the problem of memory challenges in serving large language models (LLMs), particularly those that exceed the memory capacity of a single GPU. It addresses these challenges by allowing continuous keys and values to be stored in non-contiguous memory space, thereby optimizing memory usage and improving the throughput of LLM serving engines like vLLM. [Source: vllm_pagedattention.pdf, page 2].",
+    "sources": [
+      {
+        "source": "vllm_pagedattention.pdf",
+        "page": 2
+      }
+    ],
+    "final_step": "verify:pass"
+  },
+  {
+    "question": "What are reflection tokens in Self-RAG?",
+    "answer": "Reflection tokens in SELF-RAG are inspired by reward models used in reinforcement learning and are inserted offline into the original corpus by a trained critic model. They are used to decide the need for retrieval and to self-evaluate generation quality. [Source: self_rag.pdf, page 3]",
+    "sources": [
+      {
+        "source": "self_rag.pdf",
+        "page": 3
+      }
+    ],
+    "final_step": "verify:pass"
+  },
+  {
+    "question": "What does the retrieval evaluator do in Corrective RAG?",
+    "answer": "The retrieval evaluator in Corrective RAG is designed to assess the overall quality of retrieved documents for a query. This serves as a crucial component in RAG, contributing to informative generation by reviewing and evaluating the relevance and reliability of the retrieved documents. It quantifies a confidence degree based on which different knowledge retrieval actions of {Correct, Incorrect, Ambiguous} can be triggered. [Source: corrective_rag.pdf, page 2] Additionally, the retrieval evaluator is used to estimate and trigger three knowledge retrieval actions discriminately: Correct, Incorrect, and Ambiguous. [Source: corrective_rag.pdf, page 10] The quality of the retrieval evaluator significantly determines the performance of the entire system. [Source: corrective_rag.pdf, page 9]",
+    "sources": [
+      {
+        "source": "corrective_rag.pdf",
+        "page": 2
+      },
+      {
+        "source": "corrective_rag.pdf",
+        "page": 10
+      },
+      {
+        "source": "corrective_rag.pdf",
+        "page": 9
+      }
+    ],
+    "final_step": "verify:pass"
+  },
+  {
+    "question": "What three retrieval functionalities does BGE-M3 support?",
+    "answer": "BGE-M3 supports the following three retrieval functionalities: dense retrieval, multi-vector retrieval, and sparse retrieval. [Source: bge_m3.pdf, page 1]",
+    "sources": [
+      {
+        "source": "bge_m3.pdf",
+        "page": 1
+      }
+    ],
+    "final_step": "verify:pass"
+  },
+  {
+    "question": "How does ReAct combine reasoning and acting?",
+    "answer": "ReAct combines reasoning and acting by prompting LLMs to generate both verbal reasoning traces and actions pertaining to a task in an interleaved manner. This allows the model to perform dynamic reasoning to create, maintain, and adjust high-level plans for acting (reason to act), while also interacting with the external environments (e.g., Wikipedia) to incorporate additional information into reasoning (act to reason). [Source: react.pdf, page 2]",
+    "sources": [
+      {
+        "source": "react.pdf",
+        "page": 2
+      }
+    ],
+    "final_step": "verify:pass"
+  },
+  {
+    "question": "What is chain-of-thought prompting?",
+    "answer": "Chain-of-thought prompting is a method used in few-shot reasoning tasks where a prompt consists of triples: ⟨input, chain of thought, output⟩. A chain of thought is a series of intermediate natural language reasoning steps that lead to the final output. This approach is designed to help large language models perform better on challenging tasks that require reasoning. It is particularly effective when the task is challenging and requires reasoning, and when three specific conditions are met. Chain-of-thought prompting leads to dramatically increasing scaling curves, expanding the set of tasks that large language models can perform successfully. [Source: chain_of_thought.pdf, page 2] Chain-of-thought prompting is also applicable for various text-to-text tasks, including arithmetic, commonsense, and symbolic reasoning. It is especially beneficial for tasks that require reasoning and are challenging. [Source: chain_of_thought.pdf, page 18] The emergence of chain-of-thought reasoning as a result of model scale has been a prevailing theme, suggesting that chain-of-thought prompting can significantly enhance the capabilities of large language models. [Source: chain_of_thought.pdf, page 9]",
+    "sources": [
+      {
+        "source": "chain_of_thought.pdf",
+        "page": 2
+      },
+      {
+        "source": "chain_of_thought.pdf",
+        "page": 18
+      },
+      {
+        "source": "chain_of_thought.pdf",
+        "page": 9
+      }
+    ],
+    "final_step": "verify:pass"
+  },
+  {
+    "question": "Who won the 2022 FIFA World Cup?",
+    "answer": "I couldn't find this in the provided documents.",
+    "sources": [],
+    "final_step": "fallback"
+  }
+]
