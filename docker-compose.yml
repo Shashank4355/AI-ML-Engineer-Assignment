@@ -1,0 +1,36 @@
+services:
+  vllm:
+    image: vllm/vllm-openai:latest
+    command: >
+      --model Qwen/Qwen2.5-VL-7B-Instruct-AWQ
+      --max-model-len 8192
+      --gpu-memory-utilization 0.90
+      --dtype float16
+      --quantization awq
+      --tensor-parallel-size 1
+      --limit-mm-per-prompt image=1
+    ports: ["8000:8000"]
+    volumes: ["~/.cache/huggingface:/root/.cache/huggingface"]
+    ipc: host
+    deploy:
+      resources:
+        reservations:
+          devices: [{ driver: nvidia, count: all, capabilities: [gpu] }]
+
+  qdrant:
+    image: qdrant/qdrant:v1.12.4
+    ports: ["6333:6333"]
+    volumes: ["qdrant_data:/qdrant/storage"]
+
+  api:
+    build: .
+    env_file: .env
+    environment:
+      VLLM_BASE_URL: http://vllm:8000/v1
+      QDRANT_URL: http://qdrant:6333
+    ports: ["8081:8081"]
+    volumes: ["./data:/app/data"]
+    depends_on: [vllm, qdrant]
+
+volumes:
+  qdrant_data:

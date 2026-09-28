@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+python-multipart
+pydantic>=2.9
+openai>=1.55
+langgraph>=0.2.60
+qdrant-client>=1.12
+sentence-transformers>=3.3
+rank-bm25
+pymupdf>=1.25
+python-dotenv>=1.0
+requests>=2.32
+google-genai>=1.0
