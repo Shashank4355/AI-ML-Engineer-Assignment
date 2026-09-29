@@ -5,3 +5,4 @@ data/bm25.pkl
 *.pyc
 .venv/
 project.zip
+SUBMISSION.md
